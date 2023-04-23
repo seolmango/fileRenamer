@@ -75,7 +75,7 @@ def set_new_folder_path():
         NEWFOLDERPATH = os.getcwd()
     if os.path.exists(NEWFOLDERPATH):
         print("이미 존재하는 폴더입니다.")
-        if input("이 폴더에 파일을 복사하시겠습니까? (Y/N): ").lower() == "y":
+        if input("이 폴더에 파일을 이동하시겠습니까? (Y/N): ").lower() == "y":
             os.system("cls")
             return NEWFOLDERPATH
         else:
