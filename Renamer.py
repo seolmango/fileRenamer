@@ -11,7 +11,18 @@ class NotSetedVariableError(Exception):
         return self.message
 
 # 함수 정의
+def print_version():
+    print("""\
+\x1b[1;36m================================
+|<reNamer> - Version 2023/04/23|
+|                              |
+|            made by Seolmango |
+================================\x1b[1;m""")
+    print()
+    return None
+
 def set_folder_path():
+    print_version()
     FOLDERPATH = input(f"폴더 경로를 입력하세요(기준은 {os.getcwd()}): ")
     if FOLDERPATH == "":
         FOLDERPATH = os.getcwd()
@@ -36,6 +47,7 @@ def set_folder_path():
         return set_folder_path()
 
 def set_search_pattern(file_path):
+    print_version()
     files = os.listdir(file_path)
     print("""\
 [검색 패턴 문법]
@@ -70,6 +82,7 @@ def set_search_pattern(file_path):
         return result
 
 def set_new_folder_path():
+    print_version()
     NEWFOLDERPATH = input(f"새로운 폴더 경로를 입력하세요(기준은 {os.getcwd()}): ")
     if NEWFOLDERPATH == "":
         NEWFOLDERPATH = os.getcwd()
@@ -86,6 +99,7 @@ def set_new_folder_path():
         return NEWFOLDERPATH
 
 def set_rename_pattern(files):
+    print_version()
     print("""\
 [이름 설정 패턴 문법]
 1. 기존 파일 이름에서 찾은 변수를 사용할때는 {변수명}으로 사용합니다.
