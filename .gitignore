@@ -4,3 +4,4 @@ example/*.jpg
 Renamer.spec
 dist/
 build/
+Renamer_Ver.*.spec
