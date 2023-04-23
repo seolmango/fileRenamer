@@ -185,3 +185,4 @@ if __name__ == "__main__":
     for old, new in new_preview:
         os.rename(os.path.join(FOLDERPATH, old[0]), os.path.join(NEWFOLDERPATH, new))
     print("작업이 완료되었습니다.")
+    os.system("pause")
