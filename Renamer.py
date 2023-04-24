@@ -14,7 +14,7 @@ class NotSetedVariableError(Exception):
 def print_version():
     print("""\
 \x1b[1;36m================================
-|<reNamer> - Version 2023/04/23|
+|<reNamer> - Version 2023/04/24|
 |                              |
 |            made by Seolmango |
 ================================\x1b[1;m""")
@@ -44,6 +44,7 @@ def set_folder_path():
         os.system("cls")
         return FOLDERPATH
     else:
+        os.system("cls")
         return set_folder_path()
 
 def set_search_pattern(file_path):
@@ -66,7 +67,8 @@ def set_search_pattern(file_path):
             os.system("cls")
             return set_search_pattern(file_path)
         else:
-            exit()
+            os.system("cls")
+            return set_search_pattern(set_folder_path())
     elif len(result) <= 20:
         print(f"패턴에 일치하는 파일의 수: {len(result)}")
         for index, name in enumerate(result):
@@ -80,6 +82,9 @@ def set_search_pattern(file_path):
     if input("이 패턴이 맞습니까? (Y/N): ").lower() == "y":
         os.system("cls")
         return result
+    else:
+        os.system("cls")
+        return set_search_pattern(file_path)
 
 def set_new_folder_path():
     print_version()
