@@ -147,7 +147,7 @@ def set_output_folder(folder_path):
             else:
                 return set_output_folder(folder_path)
 
-def set_output_pattern(result, before_path, after_path):
+def set_simple_output_pattern(result, before_path, after_path):
     print_version_info()
     print("""\
 [이름 설정 패턴 문법]
@@ -160,7 +160,7 @@ def set_output_pattern(result, before_path, after_path):
     for index, file in enumerate(result):
         new_name = reNamer_compiler(pattern_raw, file[1], {"Counter":index+1})
         if new_name == False:
-            return set_output_pattern(result, before_path, after_path)
+            return set_simple_output_pattern(result, before_path, after_path)
         else:
             new_preview.append([file[0], new_name])
     print("파일 이름 변경 미리보기")
@@ -194,13 +194,13 @@ def set_output_pattern(result, before_path, after_path):
         else:
             return new_preview
     else:
-        return set_output_pattern(result, before_path, after_path)
+        return set_simple_output_pattern(result, before_path, after_path)
 
 def main():
     folder_path = set_work_folder()
     target_files = set_target_files(folder_path)
     output_folder = set_output_folder(folder_path)
-    data = set_output_pattern(target_files, folder_path, output_folder)
+    data = set_simple_output_pattern(target_files, folder_path, output_folder)
     print_version_info()
     print("지금이 작업을 복구할 수 있는 마지막 기회입니다. 다시 한번 작업이 잘 진행되었는지 확인해주세요.")
     if input("작업을 복구하시겠습니까? (Y/N) > ").lower() == "y":
