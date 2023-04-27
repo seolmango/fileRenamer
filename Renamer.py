@@ -43,7 +43,7 @@ def print_version_info():
         os.system("cls")
         print("""\
 \x1b[1;36m================================
-|<reNamer> - Version 2023/04/24|
+|<reNamer> - Regex Renamer Tool|
 |                              |
 |            made by Seolmango |
 ================================\x1b[1;m""")
