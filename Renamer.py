@@ -3,6 +3,41 @@ import re
 import ast
 import platform
 
+def reNamer_compiler(pattern, vars, spec_vars):
+    new_name = ''
+    temp_vars = dict(vars, **spec_vars)
+    i = 0
+    while i < len(pattern):
+        if pattern[i] == "{":
+            j = i + 1
+            while pattern[j] != "}":
+                j += 1
+            if pattern[i+1:j] not in temp_vars:
+                print(f"패턴에 존재하지 않는 변수 {pattern[i+1:j]}가 있습니다.")
+                os.system("pause")
+                return False
+            new_name += str(temp_vars[pattern[i+1:j]])
+            i = j
+        elif pattern[i] == "<":
+            j = i + 1
+            while pattern[j] != ">":
+                j += 1
+            code = pattern[i+1:j]
+            for v in temp_vars.keys():
+                code = code.replace("{"+v+"}", str(temp_vars[v]))
+            try:
+                result = ast.literal_eval(code)
+            except Exception:
+                print(f"코드 {code}가 올바르지 않습니다.")
+                os.system("pause")
+                return False
+            new_name += str(result)
+            i = j
+        else:
+            new_name += pattern[i]
+        i+=1    
+    return new_name
+
 def print_version_info():
     try:
         os.system("cls")
@@ -123,40 +158,11 @@ def set_output_pattern(result, before_path, after_path):
     pattern_raw = input("패턴을 입력하세요 > ")
     new_preview = []
     for index, file in enumerate(result):
-        new_name = ""
-        counter = index+1
-        i = 0
-        while i < len(pattern_raw):
-            if pattern_raw[i] == "{":
-                j = i+1
-                while pattern_raw[j] != "}":
-                    j += 1
-                if pattern_raw[i+1:j] not in file[1]:
-                    print(f"패턴에 존재하지 않는 변수 {pattern_raw[i+1:j]}가 있습니다.")
-                    os.system("pause")
-                    return set_output_pattern(result, before_path, after_path)
-                new_name += str(file[1][pattern_raw[i+1:j]])
-                i = j
-            elif pattern_raw[i] == "<":
-                j = i+1
-                while pattern_raw[j] != ">":
-                    j += 1
-                code = pattern_raw[i+1:j]
-                for i in file[1].keys():
-                    code = code.replace("{"+i+"}", str(file[1][i]))
-                code = code.replace("{Counter}", str(counter))
-                try:
-                    code = ast.literal_eval(code)
-                except Exception:
-                    print(f"파이썬 코드 {code}가 올바르지 않습니다.")
-                    os.system("pause")
-                    return set_output_pattern(result, before_path, after_path)
-                new_name += str(code)
-                i = j
-            else:
-                new_name += pattern_raw[i]
-            i += 1
-        new_preview.append([file[0], new_name])
+        new_name = reNamer_compiler(pattern_raw, file[1], {"Counter":index+1})
+        if new_name == False:
+            return set_output_pattern(result, before_path, after_path)
+        else:
+            new_preview.append([file[0], new_name])
     print("파일 이름 변경 미리보기")
     for i in range(0, min(len(new_preview), 20)):
         print(f"{i+1} | {new_preview[i][0]} -> {new_preview[i][1]}")
@@ -186,10 +192,7 @@ def set_output_pattern(result, before_path, after_path):
                 os.system("pause")
                 exit()
         else:
-            print("긴급 복구에 성공했습니다. 아무키나 누르면 다시 시작합니다.")
-            os.system("pause")
-            return set_output_pattern(result, before_path, after_path)
-        return new_preview
+            return new_preview
     else:
         return set_output_pattern(result, before_path, after_path)
 
