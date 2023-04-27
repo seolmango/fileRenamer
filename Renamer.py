@@ -159,8 +159,32 @@ def set_output_pattern(result, before_path, after_path):
     if len(new_preview) > 20:
         print(f"...{len(new_preview)-20}개의 파일이 더 존재합니다.")
     if input("이대로 진행하시겠습니까? (Y/N) > ").lower() == "y":
+        success = True
+        successed = []
         for file in new_preview:
-            os.rename(os.path.join(before_path, file[0]), os.path.join(after_path, file[1]))
+            try:
+                os.rename(os.path.join(before_path, file[0]), os.path.join(after_path, file[1]))
+            except Exception:
+                print(f"파일 이름 변경에 실패했습니다. {file[0]}")
+                success = False
+            else:
+                successed.append([file[0], file[1]])
+        if not success:
+            print("파일 이름 변경 실패!! 긴급 복구를 진행합니다.")
+            os.system("pause")
+            try:
+                for file in successed:
+                    print_version_info()
+                    print(f"복구 진행 중... {file[1]} -> {file[0]} | ({successed.index(file)+1}/{len(successed)})")
+                    os.rename(os.path.join(before_path, file[1]), os.path.join(after_path, file[0]))
+            except Exception:
+                print("긴급 복구에 실패했습니다. 프로그램을 종료합니다.")
+                os.system("pause")
+                exit()
+        else:
+            print("긴급 복구에 성공했습니다. 아무키나 누르면 다시 시작합니다.")
+            os.system("pause")
+            return set_output_pattern(result, before_path, after_path)
         return new_preview
     else:
         return set_output_pattern(result, before_path, after_path)
@@ -175,6 +199,8 @@ def main():
     if input("작업을 복구하시겠습니까? (Y/N) > ").lower() == "y":
         try:
             for file in data:
+                print_version_info()
+                print(f"복구 진행 중... {file[1]} -> {file[0]} | ({data.index(file)+1}/{len(data)})")
                 os.rename(os.path.join(output_folder, file[1]), os.path.join(folder_path, file[0]))
         except Exception:
             print("작업 복구에 실패했습니다.")
