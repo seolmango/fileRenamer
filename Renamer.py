@@ -61,6 +61,10 @@ def set_target_files(folder_path):
 - 더 많은 패턴은 https://docs.python.org/ko/3/library/re.html 에서 확인하세요.
 """)
     pattern_raw = input("패턴을 입력하세요 > ")
+    if "<Counter>" in pattern_raw:
+        print("Counter는 이미 정의된 변수로 사용하실 수 없습니다.")
+        os.system("pause")
+        return set_target_files(folder_path)
     try:
         pattern = re.compile(pattern_raw)
     except Exception:
