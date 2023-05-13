@@ -23,9 +23,10 @@ def reNamer_compiler(pattern, vars, spec_vars):
                 j += 1
             code = pattern[i+1:j]
             try:
-                result = eval(code, {}, temp_vars)
-            except Exception:
-                print(f"코드 {code}가 올바르지 않습니다.")
+                result = reNamer_safeEval(code, temp_vars)
+            except Exception as e:
+                print("[코드에서 에러가 발생했습니다]")
+                print(f"설명: {e}")
                 os.system("pause")
                 return False
             new_name += str(result)
@@ -34,6 +35,14 @@ def reNamer_compiler(pattern, vars, spec_vars):
             new_name += pattern[i]
         i+=1    
     return new_name
+
+def reNamer_safeEval(code, spec_vars):
+    allowed_names = dict(spec_vars, **{"int": int, "float": float, "str": str})
+    compiled_code = compile(code, "<string>", "eval")
+    for name in compiled_code.co_names:
+        if name not in allowed_names:
+            raise NameError(f"객체 {name}은 사용하실 수 없습니다.")
+    return eval(compiled_code, {"__builtins__": {}}, allowed_names)
 
 def print_version_info():
     try:
