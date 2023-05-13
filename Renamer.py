@@ -1,6 +1,5 @@
 import os
 import re
-import ast
 import platform
 
 def reNamer_compiler(pattern, vars, spec_vars):
@@ -23,10 +22,8 @@ def reNamer_compiler(pattern, vars, spec_vars):
             while pattern[j] != ">":
                 j += 1
             code = pattern[i+1:j]
-            for v in temp_vars.keys():
-                code = code.replace("{"+v+"}", str(temp_vars[v]))
             try:
-                result = ast.literal_eval(code)
+                result = eval(code, {}, temp_vars)
             except Exception:
                 print(f"코드 {code}가 올바르지 않습니다.")
                 os.system("pause")
@@ -152,7 +149,8 @@ def set_simple_output_pattern(result, before_path, after_path):
     print("""\
 [이름 설정 패턴 문법]
 1. 기존 파일 이름에서 찾은 변수를 사용할때는 {변수명}으로 사용합니다.
-2. <(파이썬 코드)>는 그 자리에 그 코드의 실행 결과를 넣습니다. 이 코드 안에도 {변수}를 넣을 수 있습니다.
+2. <(파이썬 코드)>는 그 자리에 그 코드의 실행 결과를 넣습니다. 이 코드 안에도 변수를 넣을 수 있습니다.
+- 모든 변수의 자료형은 string 입니다. 사칙연산을 위해선 int()나 float()로 변환하셔야 합니다.
 - Counter는 1부터 시작하는 특수한 변수입니다. 변수 Counter는 파일의 순서를 만들 때 사용가능합니다.
 """)
     pattern_raw = input("패턴을 입력하세요 > ")
