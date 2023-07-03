@@ -73,6 +73,7 @@ def set_work_folder():
         folder_path = os.getcwd()
     try:
         folder_files = os.listdir(folder_path)
+        folder_files = list(filter (lambda x: os.path.isfile(os.path.join(folder_path, x)), folder_files))
     except FileNotFoundError:
         if input(f"폴더 '{folder_path}'가 존재하지 않습니다. 다시 입력하시겠습니까? (Y/N) > ").lower() == "y":
             return set_work_folder()
@@ -93,6 +94,7 @@ def set_work_folder():
 def set_target_files(folder_path):
     print_version_info()
     files = os.listdir(folder_path)
+    files = list(filter (lambda x: os.path.isfile(os.path.join(folder_path, x)), files))
     print("""\
 [검색 패턴 문법]
 1. 기존 파일 이름에서 찾은 변수를 사용할때는 (?P<변수명>패턴)으로 사용합니다.
