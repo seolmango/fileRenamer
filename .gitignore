@@ -6,3 +6,4 @@ build/
 Renamer_Ver.*.spec
 desktop.ini
 .idea
+.venv

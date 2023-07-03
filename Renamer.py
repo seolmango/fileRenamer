@@ -1,6 +1,7 @@
 import os
 import re
 import platform
+import tqdm
 
 def reNamer_compiler(pattern, vars, spec_vars):
     new_name = ''
@@ -237,9 +238,9 @@ def main():
     print("지금이 작업을 복구할 수 있는 마지막 기회입니다. 다시 한번 작업이 잘 진행되었는지 확인해주세요.")
     if input("작업을 복구하시겠습니까? (Y/N) > ").lower() == "y":
         try:
-            for file in data:
-                print_version_info()
-                print(f"복구 진행 중... {file[1]} -> {file[0]} | ({data.index(file)+1}/{len(data)})")
+            pbar = tqdm.tqdm(data)
+            for file in pbar:
+                pbar.set_description(f"복구 진행 중... {file[1]} -> {file[0]} | ({data.index(file)+1}/{len(data)})")
                 os.rename(os.path.join(output_folder, file[1]), os.path.join(folder_path, file[0]))
         except Exception:
             print("작업 복구에 실패했습니다.")
