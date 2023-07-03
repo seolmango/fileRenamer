@@ -166,15 +166,38 @@ def set_simple_output_pattern(result, before_path, after_path):
 """)
     pattern_raw = input("패턴을 입력하세요 > ")
     new_preview = []
+    format_check = False
     for index, file in enumerate(result):
         new_name = reNamer_compiler(pattern_raw, file[1], {"Counter":index+1})
         if new_name == False:
             return set_simple_output_pattern(result, before_path, after_path)
         else:
-            new_preview.append([file[0], new_name])
+            if file[0].count(".") < 1:
+                before_temp = "NoneFormat"
+            else:
+                before_temp = file[0].split(".")[-1]
+            if new_name.count(".") < 1:
+                after_temp = "NoneFormat"
+            else:
+                after_temp = new_name.split(".")[-1]
+            if before_temp != after_temp:
+                format_check = True
+                new_preview.append([file[0], new_name, new_name+"."+before_temp])
+            else:
+                new_preview.append([file[0], new_name])
     print("파일 이름 변경 미리보기")
     for i in range(0, min(len(new_preview), 20)):
         print(f"{i+1} | {new_preview[i][0]} -> {new_preview[i][1]}")
+    if format_check:
+        if input("확장자가 변경되거나 누락된 파일이 존재합니다. 자동 확장자 복구를 진행하시겠습니까? (Y/N) > ").lower() == "y":
+            for i in range(0, len(new_preview)):
+                if len(new_preview[i]) == 3:
+                    new_preview[i] = [new_preview[i][0], new_preview[i][2]]
+                    print(f"{new_preview[i][0]} -> {new_preview[i][1]}")
+        else:
+            for i in range(0, len(new_preview)):
+                if len(new_preview[i]) == 3:
+                    new_preview[i] = [new_preview[i][0], new_preview[i][1]]
     if len(new_preview) > 20:
         print(f"...{len(new_preview)-20}개의 파일이 더 존재합니다.")
     if input("이대로 진행하시겠습니까? (Y/N) > ").lower() == "y":
@@ -235,4 +258,3 @@ if __name__ == "__main__":
         pass
     os.system("pause")
     exit()
-    
